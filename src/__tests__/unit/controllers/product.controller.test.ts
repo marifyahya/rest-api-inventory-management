@@ -1,0 +1,174 @@
+import { Request, Response } from "express";
+import * as productController from "../../../controllers/product.controller";
+import { productService } from "../../../services/product.service";
+import { createMockReqRes } from "../../utils/mock-factory";
+
+jest.mock("../../../services/product.service", () => ({
+  productService: {
+    getAll: jest.fn(),
+    getById: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
+
+jest.mock("../../../utils/date.util", () => ({
+  withLocalTime: (data: unknown) => data,
+}));
+
+describe("ProductController", () => {
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let jsonMock: jest.Mock;
+  let statusMock: jest.Mock;
+
+  beforeEach(() => {
+    const mocked = createMockReqRes();
+    mockRequest = mocked.req;
+    mockResponse = mocked.res;
+    jsonMock = mocked.jsonMock;
+    statusMock = mocked.statusMock;
+
+    jest.clearAllMocks();
+  });
+
+  describe("index", () => {
+    it("should return all products", async () => {
+      const mockProducts = [
+        { id: 1, name: "Product 1", price: 100, stock: 10 },
+        { id: 2, name: "Product 2", price: 200, stock: 20 },
+      ];
+
+      (productService.getAll as jest.Mock).mockResolvedValue(mockProducts);
+
+      await productController.index(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: mockProducts,
+      });
+    });
+  });
+
+  describe("show", () => {
+    it("should return product by id", async () => {
+      const mockProduct = { id: 1, name: "Product 1", price: 100, stock: 10 };
+      mockRequest.params = { id: "1" };
+
+      (productService.getById as jest.Mock).mockResolvedValue(mockProduct);
+
+      await productController.show(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: mockProduct,
+      });
+    });
+
+    it("should return 404 when product not found", async () => {
+      mockRequest.params = { id: "999" };
+
+      (productService.getById as jest.Mock).mockResolvedValue(null);
+
+      await productController.show(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        message: "Product not found",
+      });
+    });
+  });
+
+  describe("store", () => {
+    it("should create new product", async () => {
+      const newProduct = { name: "New Product", price: 150, stock: 5 };
+      mockRequest.body = newProduct;
+
+      (productService.create as jest.Mock).mockResolvedValue({
+        id: 3,
+        ...newProduct,
+      });
+
+      await productController.store(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(statusMock).toHaveBeenCalledWith(201);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: { id: 3, ...newProduct },
+      });
+    });
+  });
+
+  describe("update", () => {
+    it("should update product", async () => {
+      const updatedProduct = { id: 1, name: "Updated", price: 300, stock: 15 };
+      mockRequest.params = { id: "1" };
+      mockRequest.body = { name: "Updated", price: 300, stock: 15 };
+
+      (productService.update as jest.Mock).mockResolvedValue(updatedProduct);
+
+      await productController.update(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        data: updatedProduct,
+      });
+    });
+  });
+
+  describe("destroy", () => {
+    it("should delete product", async () => {
+      const mockProduct = { id: 1, name: "Product 1", price: 100, stock: 10 };
+      mockRequest.params = { id: "1" };
+
+      (productService.getById as jest.Mock).mockResolvedValue(mockProduct);
+      (productService.delete as jest.Mock).mockResolvedValue(mockProduct);
+
+      await productController.destroy(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: true,
+        message: "Product deleted successfully",
+      });
+    });
+
+    it("should return 404 when product not found", async () => {
+      mockRequest.params = { id: "999" };
+
+      (productService.getById as jest.Mock).mockResolvedValue(null);
+
+      await productController.destroy(
+        mockRequest,
+        mockResponse
+      );
+
+      expect(statusMock).toHaveBeenCalledWith(404);
+      expect(jsonMock).toHaveBeenCalledWith({
+        success: false,
+        message: "Product not found",
+      });
+    });
+  });
+});

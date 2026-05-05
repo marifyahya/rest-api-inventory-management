@@ -119,6 +119,81 @@ paths:
                   message:
                     type: string
                     example: "Product not found"
+    put:
+      summary: Update product
+      operationId: updateProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Iphone 15 Pro Max"
+                price:
+                  type: number
+                  example: 18000000
+                stock:
+                  type: integer
+                  example: 5
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Product not found
+    delete:
+      summary: Delete product
+      operationId: deleteProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Product deleted successfully"
+        "404":
+          description: Product not found
 
 components:
   schemas:
@@ -160,5 +235,5 @@ components:
             items:
               type: string
           example:
-            price: [ "Invalid input: expected number, received string" ]
-            stock: [ "Invalid input: expected number, received null" ]
+            price: ["Invalid input: expected number, received string"]
+            stock: ["Invalid input: expected number, received null"]

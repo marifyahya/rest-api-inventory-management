@@ -25,7 +25,7 @@ export const formatTime = (date: Date | string | number, format: string = "YYYY-
  */
 export const withLocalTime = <T extends Record<string, any>>(
   data: T | T[],
-  fields: string[] = ["createdAt", "updatedAt"]
+  fields: string[] = ["createdAt", "updatedAt"],
 ): any => {
   if (Array.isArray(data)) {
     return data.map((item) => withLocalTime(item, fields));

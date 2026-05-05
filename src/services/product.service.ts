@@ -16,6 +16,23 @@ class ProductService {
       data: payload,
     });
   }
+
+  async update(id: number, payload: { name: string; price: number; stock: number }) {
+    return await prisma.product.update({
+      where: {
+        id: id,
+      },
+      data: payload,
+    });
+  }
+
+  async delete(id: number) {
+    return await prisma.product.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
 }
 
 export const productService = new ProductService();

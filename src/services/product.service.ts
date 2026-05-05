@@ -1,24 +1,20 @@
-const products = [
-  { id: 1, name: "Laptop", price: 23000000, stock: 10 },
-  { id: 2, name: "Mouse", price: 900000, stock: 100 },
-  { id: 3, name: "Keyboard", price: 1200000, stock: 50 },
-];
+import prisma from "../lib/prisma";
 
 class ProductService {
-  getAll() {
-    return products;
+  async getAll() {
+    return await prisma.product.findMany();
   }
 
-  getById(id: number) {
-    return products.find((p) => p.id === id);
+  async getById(id: number) {
+    return await prisma.product.findUnique({
+      where: { id },
+    });
   }
 
-  create(payload: { name: string, price: number, stock: number }) {
-    const id = products.length + 1;
-    const product = { id, ...payload };
-    products.push(product);
-
-    return product;
+  async create(payload: { name: string; price: number; stock: number }) {
+    return await prisma.product.create({
+      data: payload,
+    });
   }
 }
 

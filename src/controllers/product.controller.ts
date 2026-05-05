@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { productService } from "../services/product.service";
+import { withLocalTime } from "../utils/date.util";
 
 export const index = async (_req: Request, res: Response) => {
   const products = await productService.getAll();
-  res.json({ success: true, data: products });
+  res.json({ success: true, data: withLocalTime(products) });
 };
 
 export const show = async (req: Request, res: Response) => {
@@ -13,10 +14,10 @@ export const show = async (req: Request, res: Response) => {
     return res.status(404).json({ success: false, message: "Product not found" });
   }
 
-  res.json({ success: true, data: product });
+  res.json({ success: true, data: withLocalTime(product) });
 };
 
 export const store = async (req: Request, res: Response) => {
   const product = await productService.create(req.body);
-  res.status(201).json({ success: true, data: product });
+  res.status(201).json({ success: true, data: withLocalTime(product) });
 };

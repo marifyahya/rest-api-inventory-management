@@ -11,8 +11,9 @@ app.use("/api", apiRoutes);
 
 app.get("/", (_req, res) => {
   res.json({
-    message: "Welcome to Node.js",
+    message: "Welcome to Nodes",
     status: "healthy",
+    server_time: new Date().toLocaleString(),
   });
 });
 

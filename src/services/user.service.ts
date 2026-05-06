@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma";
+import bcrypt from "bcryptjs";
 
 class UserService {
   findByEmail(email: string) {
@@ -9,10 +10,23 @@ class UserService {
     });
   }
 
-  create(payload: { email: string; password: string; name: string }) {
+  async create(payload: { email: string; password: string; name: string }) {
+    const hashedPassword = await bcrypt.hash(payload.password, 10);
     return prisma.user.create({
-      data: payload,
+      data: { ...payload, password: hashedPassword },
     });
+  }
+
+  findById(id: number) {
+    return prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  comparePassword(plain: string, hashed: string) {
+    return bcrypt.compare(plain, hashed);
   }
 }
 

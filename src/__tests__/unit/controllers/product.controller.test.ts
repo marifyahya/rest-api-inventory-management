@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import * as productController from "../../../controllers/product.controller";
 import { productService } from "../../../services/product.service";
 import { createMockReqRes } from "../../utils/mock-factory";
+import { NotFoundError } from "../../../utils/errors/AppError";
 
 jest.mock("../../../services/product.service", () => ({
   productService: {
@@ -20,6 +21,7 @@ jest.mock("../../../utils/date.util", () => ({
 describe("ProductController", () => {
   let mockRequest: Request;
   let mockResponse: Response;
+  let mockNext: NextFunction;
   let jsonMock: jest.Mock;
   let statusMock: jest.Mock;
 
@@ -27,6 +29,7 @@ describe("ProductController", () => {
     const mocked = createMockReqRes();
     mockRequest = mocked.req;
     mockResponse = mocked.res;
+    mockNext = jest.fn();
     jsonMock = mocked.jsonMock;
     statusMock = mocked.statusMock;
 
@@ -42,10 +45,7 @@ describe("ProductController", () => {
 
       (productService.getAll as jest.Mock).mockResolvedValue(mockProducts);
 
-      await productController.index(
-        mockRequest,
-        mockResponse
-      );
+      await productController.index(mockRequest, mockResponse, mockNext);
 
       expect(jsonMock).toHaveBeenCalledWith({
         success: true,
@@ -61,10 +61,7 @@ describe("ProductController", () => {
 
       (productService.getById as jest.Mock).mockResolvedValue(mockProduct);
 
-      await productController.show(
-        mockRequest,
-        mockResponse
-      );
+      await productController.show(mockRequest, mockResponse, mockNext);
 
       expect(jsonMock).toHaveBeenCalledWith({
         success: true,
@@ -72,21 +69,17 @@ describe("ProductController", () => {
       });
     });
 
-    it("should return 404 when product not found", async () => {
+    it("should call next with NotFoundError when product not found", async () => {
       mockRequest.params = { id: "999" };
 
       (productService.getById as jest.Mock).mockResolvedValue(null);
 
-      await productController.show(
-        mockRequest,
-        mockResponse
-      );
+      await productController.show(mockRequest, mockResponse, mockNext);
 
-      expect(statusMock).toHaveBeenCalledWith(404);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Product not found",
-      });
+      expect(mockNext).toHaveBeenCalledWith(expect.any(NotFoundError));
+      const error = (mockNext as jest.Mock).mock.calls[0][0];
+      expect(error.message).toBe("Product not found");
+      expect(error.statusCode).toBe(404);
     });
   });
 
@@ -100,10 +93,7 @@ describe("ProductController", () => {
         ...newProduct,
       });
 
-      await productController.store(
-        mockRequest,
-        mockResponse
-      );
+      await productController.store(mockRequest, mockResponse, mockNext);
 
       expect(statusMock).toHaveBeenCalledWith(201);
       expect(jsonMock).toHaveBeenCalledWith({
@@ -121,10 +111,7 @@ describe("ProductController", () => {
 
       (productService.update as jest.Mock).mockResolvedValue(updatedProduct);
 
-      await productController.update(
-        mockRequest,
-        mockResponse
-      );
+      await productController.update(mockRequest, mockResponse, mockNext);
 
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith({
@@ -142,10 +129,7 @@ describe("ProductController", () => {
       (productService.getById as jest.Mock).mockResolvedValue(mockProduct);
       (productService.delete as jest.Mock).mockResolvedValue(mockProduct);
 
-      await productController.destroy(
-        mockRequest,
-        mockResponse
-      );
+      await productController.destroy(mockRequest, mockResponse, mockNext);
 
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalledWith({
@@ -154,21 +138,14 @@ describe("ProductController", () => {
       });
     });
 
-    it("should return 404 when product not found", async () => {
+    it("should call next with NotFoundError when product not found", async () => {
       mockRequest.params = { id: "999" };
 
       (productService.getById as jest.Mock).mockResolvedValue(null);
 
-      await productController.destroy(
-        mockRequest,
-        mockResponse
-      );
+      await productController.destroy(mockRequest, mockResponse, mockNext);
 
-      expect(statusMock).toHaveBeenCalledWith(404);
-      expect(jsonMock).toHaveBeenCalledWith({
-        success: false,
-        message: "Product not found",
-      });
+      expect(mockNext).toHaveBeenCalledWith(expect.any(NotFoundError));
     });
   });
 });

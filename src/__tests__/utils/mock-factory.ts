@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Factory to create mock Express Request and Response objects for testing.
@@ -10,6 +10,7 @@ export const createMockReqRes = (options: {
 } = {}) => {
   const jsonMock = jest.fn();
   const statusMock = jest.fn().mockReturnValue({ json: jsonMock });
+  const nextMock = jest.fn();
 
   const req = {
     params: options.params || {},
@@ -25,6 +26,7 @@ export const createMockReqRes = (options: {
   return {
     req: req as Request,
     res: res as Response,
+    next: nextMock as NextFunction,
     statusMock,
     jsonMock,
   };

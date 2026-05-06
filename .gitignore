@@ -5,3 +5,10 @@ node_modules
 /generated/prisma
 *.db
 *.db-journal
+
+# Build output
+/dist
+
+# Tooling
+/.planning
+/.vscode

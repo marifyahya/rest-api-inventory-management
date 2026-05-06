@@ -60,4 +60,14 @@ describe("Product API Integration", () => {
       });
     });
   });
+
+  describe("General Error Handling", () => {
+    it("should return 404 for non-existent routes", async () => {
+      const response = await request(app).get("/api/non-existent-route");
+
+      expect(response.status).toBe(404);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.message).toBe("Route not found");
+    });
+  });
 });

@@ -1,0 +1,56 @@
+@baseUrl = http://localhost:3002
+@contentType = application/json
+
+### Health Check
+GET {{baseUrl}}/
+Accept: {{contentType}}
+
+### --- AUTH ---
+
+### Login User
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+
+### Get Auth Token (Variables for subsequent requests)
+@token = {{login.response.body.data.token}}
+
+
+### --- PRODUCTS ---
+
+### Get All Products
+GET {{baseUrl}}/api/products
+Accept: {{contentType}}
+
+### Get Product by ID
+GET {{baseUrl}}/api/products/1
+Accept: {{contentType}}
+
+### Create New Product
+POST {{baseUrl}}/api/products
+Content-Type: {{contentType}}
+
+{
+  "name": "Sony PlayStation 5",
+  "price": 7500000,
+  "stock": 10
+}
+
+### Update Product
+PUT {{baseUrl}}/api/products/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Sony PlayStation 5 Slim",
+  "price": 7200000,
+  "stock": 15
+}
+
+### Delete Product
+DELETE {{baseUrl}}/api/products/1
+Accept: {{contentType}}

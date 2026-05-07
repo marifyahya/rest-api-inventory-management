@@ -12,13 +12,15 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     throw new UnauthorizedError("Invalid credentials");
   }
 
-  if (user.password !== password) {
+  const isPasswordValid = await userService.comparePassword(password, user.password);
+  if (!isPasswordValid) {
     throw new UnauthorizedError("Invalid credentials");
   }
 
+  const token = generateToken({ id: user.id, role: user.role });
   return res.json({
     success: true,
-    data: { token: generateToken({ id: user.id }), user: user },
+    data: { token: token, user: user },
   });
 });
 
@@ -33,6 +35,6 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = await userService.create({ email, password, name });
   return res.status(201).json({
     success: true,
-    data: { token: generateToken({ id: user.id }), user: user },
+    data: { user: user },
   });
 });

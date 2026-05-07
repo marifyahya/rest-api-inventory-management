@@ -25,6 +25,7 @@ Content-Type: {{contentType}}
 
 ### Get All Products
 GET {{baseUrl}}/api/products
+Authorization: Bearer {{token}}
 Accept: {{contentType}}
 
 ### Get Product by ID

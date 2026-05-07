@@ -13,13 +13,17 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: {{contentType}}
 
 {
-  "email": "test@example.com",
+  "email": "admin@example.com",
   "password": "password"
 }
 
 ### Get Auth Token (Variables for subsequent requests)
 @token = {{login.response.body.data.token}}
 
+### Get My Profile
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
 
 ### --- PRODUCTS ---
 
@@ -29,11 +33,13 @@ Authorization: Bearer {{token}}
 Accept: {{contentType}}
 
 ### Get Product by ID
-GET {{baseUrl}}/api/products/1
+GET {{baseUrl}}/api/products/3
+Authorization: Bearer {{token}}
 Accept: {{contentType}}
 
 ### Create New Product
 POST {{baseUrl}}/api/products
+Authorization: Bearer {{token}}
 Content-Type: {{contentType}}
 
 {
@@ -44,6 +50,7 @@ Content-Type: {{contentType}}
 
 ### Update Product
 PUT {{baseUrl}}/api/products/1
+Authorization: Bearer {{token}}
 Content-Type: {{contentType}}
 
 {
@@ -54,4 +61,5 @@ Content-Type: {{contentType}}
 
 ### Delete Product
 DELETE {{baseUrl}}/api/products/1
+Authorization: Bearer {{token}}
 Accept: {{contentType}}

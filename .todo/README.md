@@ -188,4 +188,4 @@ graph TD
 ---
 
 > [!TIP]
-> **Cara paling efektif:** Kerjakan satu task → test manual via `api-test.http` → commit → lanjut task berikutnya. Jangan skip testing di antara task! Bilang nomor task yang mau dikerjakan, saya akan bantu implementasinya.
+> **Cara paling efektif:** Kerjakan satu task → test manual via `api-test.http` → commit → lanjut task berikutnya. Jangan skip testing di antara task!.

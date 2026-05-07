@@ -13,6 +13,87 @@ security:
   - bearerAuth: []
 
 paths:
+  /auth/login:
+    post:
+      summary: Login user
+      operationId: login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@example.com
+                password:
+                  type: string
+                  example: "password"
+      responses:
+        "200":
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      user:
+                        $ref: "#/components/schemas/User"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Invalid credentials
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /auth/me:
+    get:
+      summary: Get my profile
+      operationId: getMyProfile
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: My Profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/User"
+
   /products:
     get:
       summary: Get all products
@@ -335,5 +416,5 @@ components:
             items:
               type: string
           example:
-            price: [ "Invalid input: expected number, received string" ]
-            stock: [ "Invalid input: expected number, received null" ]
+            field_one: [ "Invalid input: expected number, received string" ]
+            field_two: [ "Invalid input: expected number, received null" ]

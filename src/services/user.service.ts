@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma";
 import bcrypt from "bcryptjs";
+import { NotFoundError } from "../utils/errors/AppError";
 
 class UserService {
   findByEmail(email: string) {

@@ -4,7 +4,7 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 import { roleMiddleware } from "../middlewares/role.middleware";
 import { validate } from "../middlewares/validate.middleware";
 
-import { createUserSchema } from "../schemas/user.schema";
+import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
 import { createProductSchema } from "../schemas/product.schema";
 
 import * as authController from "../controllers/auth.controller";
@@ -18,10 +18,11 @@ const adminRouter = Router();
 adminRouter.use(authMiddleware, roleMiddleware(["ADMIN"]));
 protectedRouter.use(authMiddleware);
 
-router.post("/auth/login", authController.login);
+router.post("/auth/login", validate(loginUserSchema as any), authController.login);
 
 adminRouter.post("/users", validate(createUserSchema as any), userController.store);
 
+protectedRouter.get("/auth/me", authController.me);
 protectedRouter.get("/products", productController.index);
 protectedRouter.get("/products/:id", productController.show);
 protectedRouter.post("/products", validate(createProductSchema as any), productController.store);

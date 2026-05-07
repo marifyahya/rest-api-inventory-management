@@ -8,3 +8,10 @@ export const createUserSchema = z.object({
     role: z.enum(["ADMIN", "STAFF"], "Invalid role"),
   }),
 });
+
+export const loginUserSchema = z.object({
+  body: z.object({
+    email: z.email("Email must be a valid email"),
+    password: z.string().min(1, "Password is required"),
+  }),
+});

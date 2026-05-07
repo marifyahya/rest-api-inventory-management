@@ -18,8 +18,24 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const token = generateToken({ id: user.id, role: user.role });
+  const { password: _password, ...safeUser } = user;
+
   return res.json({
     success: true,
-    data: { token: token, user: user },
+    data: { token: token, user: safeUser },
+  });
+});
+
+export const me = asyncHandler(async (req: Request, res: Response) => {
+  const user = await userService.findById(req.user!.id);
+  if (!user) {
+    throw new UnauthorizedError();
+  }
+
+  const { password: _password, ...safeUser } = user;
+
+  return res.json({
+    success: true,
+    data: safeUser,
   });
 });

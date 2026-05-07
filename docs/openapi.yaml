@@ -9,7 +9,8 @@ info:
 servers:
   - url: http://localhost:3002/api
     description: Local development server
-security: []
+security:
+  - bearerAuth: []
 
 paths:
   /products:
@@ -195,7 +196,85 @@ paths:
         "404":
           description: Product not found
 
+  /admin/users:
+    post:
+      summary: Create a new user
+      operationId: createUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: john@mail.com
+                password:
+                  type: string
+                  example: "password"
+                role:
+                  type: string
+                  enum: [ "ADMIN", "STAFF" ]
+                  example: "STAFF"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Email already exists"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Forbidden"
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Product:
       type: object
@@ -218,7 +297,28 @@ components:
         updatedAt:
           type: string
           example: "2024-05-05 15:00:00"
-
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "admin@example.com"
+        role:
+          type: string
+          example: "ADMIN"
+        createdAt:
+          type: string
+          example: "2024-05-05T15:00:00.000Z"
+        updatedAt:
+          type: string
+          example: "2024-05-05T15:00:00.000Z"
     Error:
       type: object
       properties:
@@ -235,5 +335,5 @@ components:
             items:
               type: string
           example:
-            price: ["Invalid input: expected number, received string"]
-            stock: ["Invalid input: expected number, received null"]
+            price: [ "Invalid input: expected number, received string" ]
+            stock: [ "Invalid input: expected number, received null" ]

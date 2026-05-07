@@ -1,8 +1,7 @@
 import request from "supertest";
-import app from "../../app";
 import { productService } from "../../services/product.service";
+import app from "../../app";
 
-// Mock the service layer to focus on API behavior (routes, validation, response format)
 jest.mock("../../services/product.service", () => ({
   productService: {
     getAll: jest.fn(),
@@ -10,6 +9,13 @@ jest.mock("../../services/product.service", () => ({
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+  },
+}));
+
+jest.mock("../../middlewares/auth.middleware", () => ({
+  authMiddleware: (req: any, res: any, next: any) => {
+    req.user = { id: 1, role: "STAFF" };
+    next();
   },
 }));
 

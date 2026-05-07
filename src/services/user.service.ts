@@ -10,7 +10,7 @@ class UserService {
     });
   }
 
-  async create(payload: { email: string; password: string; name: string }) {
+  async create(payload: { email: string; password: string; name: string; role: string }) {
     const hashedPassword = await bcrypt.hash(payload.password, 10);
     return prisma.user.create({
       data: { ...payload, password: hashedPassword },

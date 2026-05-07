@@ -14,10 +14,6 @@ jest.mock("../../../services/product.service", () => ({
   },
 }));
 
-jest.mock("../../../utils/date.util", () => ({
-  withLocalTime: (data: unknown) => data,
-}));
-
 describe("ProductController", () => {
   let mockRequest: Request;
   let mockResponse: Response;

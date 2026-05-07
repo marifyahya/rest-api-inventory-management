@@ -12,3 +12,7 @@ node_modules
 # Tooling
 /.planning
 /.vscode
+
+# graphify
+/.agents
+graphify-out/

@@ -45,7 +45,7 @@
 | 2.2 | **Buat Category Zod Schema** — `createCategorySchema` (name required min 2, description optional), `updateCategorySchema` (partial) | `[NEW]` src/schemas/category.schema.ts | 5m | 🟢 |
 | 2.3 | **Buat CategoryService** — Class dengan method `getAll()` (include `_count.products`), `getById()`, `create()`, `update()`, `delete()` (check products count sebelum delete, throw error jika > 0) | `[NEW]` src/services/category.service.ts | 12m | 🔵 2.1 |
 | 2.4 | **Buat CategoryController** — `index`, `show`, `store`, `update`, `destroy` menggunakan pattern yang sama dengan ProductController (asyncHandler, withLocalTime) | `[NEW]` src/controllers/category.controller.ts | 10m | 🔵 2.3 |
-| 2.5 | **Register category routes** — Tambah `GET/POST /categories`, `GET/PUT/DELETE /categories/:id`. Pasang `validate` + `authorize('ADMIN')` pada POST/PUT/DELETE | `[EDIT]` src/routes/api.ts | 5m | 🔵 2.4 |
+| ~~2.5~~ | ✅ **Register category routes** — Terdaftar di `api.ts` dengan role guard ADMIN untuk write operations. | `[EDIT]` src/routes/api.ts | 5m | 🔵 2.4 |
 
 > [!TIP]
 > **Test:** Buat beberapa category → Coba delete category kosong (sukses) → Coba delete category yang punya product (gagal 403).

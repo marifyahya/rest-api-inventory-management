@@ -17,13 +17,16 @@ class ProductService {
     return product;
   }
 
-  async create(payload: { name: string; price: number; stock: number }) {
+  async create(payload: { name: string; price: number; stock: number; categoryId: number; supplierId?: number }) {
     return await prisma.product.create({
-      data: payload,
+      data: {
+        ...payload,
+        sku: await this.generateSKU(),
+      },
     });
   }
 
-  async update(id: number, payload: { name: string; price: number; stock: number }) {
+  async update(id: number, payload: { name: string; price: number; stock: number; categoryId: number; supplierId?: number }) {
     try {
       return await prisma.product.update({
         where: {
@@ -52,6 +55,23 @@ class ProductService {
       }
       throw error;
     }
+  }
+
+  private async generateSKU(): Promise<string> {
+    const lastProduct = await prisma.product.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    let suffix = 1;
+    if (lastProduct) {
+      const lastSKU = lastProduct.sku;
+      const lastSuffix = parseInt(lastSKU.split("-")[1]);
+      suffix = lastSuffix + 1;
+    }
+
+    return `PROD-${suffix}`;
   }
 }
 

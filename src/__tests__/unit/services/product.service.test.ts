@@ -22,7 +22,7 @@ describe("ProductService", () => {
 
   describe("getAll", () => {
     it("should call prisma.product.findMany", async () => {
-      const mockProducts = [{ id: 1, name: "Test" }];
+      const mockProducts = [{ id: 1, name: "Test", categoryId: 1, price: 100, stock: 10, supplierId: 1, sku: "PROD-1" }];
       (prisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
 
       const result = await productService.getAll();

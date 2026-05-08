@@ -15,7 +15,7 @@ REST API for inventory management — built as a learning project to practice **
 
 ## Features
 
-### ✅ Completed (EPIC-01: Auth Hardening)
+### Completed (EPIC-01: Auth Hardening)
 
 - JWT authentication with bcrypt password hashing
 - Role-based access control (ADMIN / STAFF)
@@ -27,9 +27,18 @@ REST API for inventory management — built as a learning project to practice **
 - User management (ADMIN only)
 - Jest unit & integration testing
 
-### 🚧 Upcoming
+### Completed (EPIC-02: Category CRUD)
 
-- EPIC-02: Category CRUD
+- Category CRUD operations (list, get by ID, create, update, delete)
+- Product count aggregation per category (`_count.products`)
+- Delete guard — prevents deleting categories with linked products
+- Role-based route protection (write operations: ADMIN only)
+- Zod schema validation (`createCategorySchema`, `updateCategorySchema`)
+- Unit & integration tests for Category Service and Controller
+- OpenAPI documentation for Category endpoints
+
+### Upcoming
+
 - EPIC-03: Supplier CRUD
 - EPIC-04: Product Enhancement (SKU, pagination, filters)
 - EPIC-05: Stock Transactions (IN/OUT with atomic operations)
@@ -85,14 +94,14 @@ npm test -- --watch
 
 Base URL: `http://localhost:3002`
 
-### 🔓 Public
+### Public
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/` | Health check |
 | POST | `/api/auth/login` | Login and get JWT token |
 
-### 🔐 Protected (Bearer token required)
+### Protected (Bearer token required)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -102,12 +111,17 @@ Base URL: `http://localhost:3002`
 | POST | `/api/products` | Create new product |
 | PUT | `/api/products/:id` | Update product |
 | DELETE | `/api/products/:id` | Delete product |
+| GET | `/api/categories` | List all categories (with product count) |
+| GET | `/api/categories/:id` | Get category by ID |
 
-### 🛡️ Admin Only (ADMIN role + Bearer token)
+### Admin Only (ADMIN role + Bearer token)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/admin/users` | Create new user (ADMIN/STAFF) |
+| POST | `/api/admin/categories` | Create new category |
+| PUT | `/api/admin/categories/:id` | Update category |
+| DELETE | `/api/admin/categories/:id` | Delete category |
 
 ## Default Credentials
 
@@ -134,34 +148,37 @@ TIME_ZONE="Asia/Jakarta"
 
 ```
 src/
-├── controllers/          # Request handlers
+├── controllers/
 │   ├── auth.controller.ts
+│   ├── category.controller.ts
 │   ├── product.controller.ts
 │   └── user.controller.ts
-├── middlewares/           # Express middlewares
+├── middlewares/
 │   ├── auth.middleware.ts
 │   ├── role.middleware.ts
 │   ├── validate.middleware.ts
 │   └── error-handler.middleware.ts
-├── services/             # Business logic
+├── services/
+│   ├── category.service.ts
 │   ├── user.service.ts
 │   └── product.service.ts
-├── schemas/              # Zod validation schemas
+├── schemas/
+│   ├── category.schema.ts
 │   ├── user.schema.ts
 │   └── product.schema.ts
-├── routes/               # Route definitions
+├── routes/
 │   └── api.ts
-├── types/                # TypeScript declarations
+├── types/
 │   └── user.d.ts
-├── utils/                # Utility functions
+├── utils/
 │   ├── jwt.util.ts
 │   ├── date.util.ts
 │   ├── async-handler.ts
 │   └── errors/
 │       └── AppError.ts
-├── lib/                  # Library configurations
+├── lib/
 │   └── prisma.ts
-├── __tests__/            # Test files
+├── __tests__/
 │   ├── integration/
 │   ├── unit/
 │   └── utils/

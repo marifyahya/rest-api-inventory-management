@@ -6,7 +6,7 @@ export const authMiddleware = (req: Request, _res: Response, next: NextFunction)
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
-      throw new UnauthorizedError("No token provided");
+      throw new UnauthorizedError();
     }
 
     const decoded = verifyToken(token) as { id: number; role: string }
@@ -15,6 +15,6 @@ export const authMiddleware = (req: Request, _res: Response, next: NextFunction)
     next()
   } catch (error) {
     if (error instanceof UnauthorizedError) throw error;
-    throw new UnauthorizedError("Invalid token");
+    throw new UnauthorizedError();
   }
 }

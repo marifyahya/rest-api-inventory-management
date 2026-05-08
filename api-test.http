@@ -1,13 +1,20 @@
+##################################################################
+# API TEST SUITE - INVENTORY MANAGEMENT
+##################################################################
+
 @baseUrl = http://localhost:3002
 @contentType = application/json
 
-### Health Check
+### [ SYSTEM ] - Health Check
 GET {{baseUrl}}/
 Accept: {{contentType}}
 
-### --- AUTH ---
 
-### Login User
+##################################################################
+# 01. AUTHENTICATION & PROFILE
+##################################################################
+
+### Login (Admin/Staff)
 # @name login
 POST {{baseUrl}}/api/auth/login
 Content-Type: {{contentType}}
@@ -17,27 +24,136 @@ Content-Type: {{contentType}}
   "password": "password"
 }
 
-### Get Auth Token (Variables for subsequent requests)
+### Set Auth Token
 @token = {{login.response.body.data.token}}
 
-### Get My Profile
+### Get Current Profile
 GET {{baseUrl}}/api/auth/me
 Authorization: Bearer {{token}}
 Accept: {{contentType}}
 
-### --- PRODUCTS ---
 
-### Get All Products
+##################################################################
+# 02. USER MANAGEMENT (ADMIN ONLY)
+##################################################################
+
+### Create New Staff User
+# @name createUser
+POST {{baseUrl}}/api/admin/users
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Staff User",
+  "email": "staff{{$timestamp}}@example.com",
+  "password": "password",
+  "role": "STAFF"
+}
+
+
+##################################################################
+# 03. CATEGORY MODULE
+##################################################################
+
+### List All Categories
+GET {{baseUrl}}/api/categories
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Create New Category
+# @name createCategory
+POST {{baseUrl}}/api/admin/categories
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Electronics {{$timestamp}}",
+  "description": "Electronic devices and accessories"
+}
+
+### Capture Category ID
+@categoryId = {{createCategory.response.body.data.id}}
+
+### Get Category Details
+GET {{baseUrl}}/api/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Update Category
+PUT {{baseUrl}}/api/admin/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Electronic Devices Updated",
+  "description": "Updated category description"
+}
+
+### Delete Category
+# Fails if linked to products
+DELETE {{baseUrl}}/api/admin/categories/{{categoryId}}
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+
+##################################################################
+# 04. SUPPLIER MODULE
+##################################################################
+
+### List All Suppliers
+GET {{baseUrl}}/api/suppliers
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Create New Supplier
+# @name createSupplier
+POST {{baseUrl}}/api/admin/suppliers
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Tech Supplies Inc {{$timestamp}}",
+  "contact": "081234567890",
+  "address": "Jakarta, Indonesia"
+}
+
+### Capture Supplier ID
+@supplierId = {{createSupplier.response.body.data.id}}
+
+### Get Supplier Details
+GET {{baseUrl}}/api/suppliers/{{supplierId}}
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Update Supplier
+PUT {{baseUrl}}/api/admin/suppliers/{{supplierId}}
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Tech Supplies Updated",
+  "contact": "087654321098",
+  "address": "Bandung, Indonesia"
+}
+
+### Delete Supplier
+# Fails if linked to products
+DELETE {{baseUrl}}/api/admin/suppliers/{{supplierId}}
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+
+##################################################################
+# 05. PRODUCT MODULE
+##################################################################
+
+### List All Products
 GET {{baseUrl}}/api/products
 Authorization: Bearer {{token}}
 Accept: {{contentType}}
 
-### Get Product by ID
-GET {{baseUrl}}/api/products/3
-Authorization: Bearer {{token}}
-Accept: {{contentType}}
-
 ### Create New Product
+# @name createProduct
 POST {{baseUrl}}/api/products
 Authorization: Bearer {{token}}
 Content-Type: {{contentType}}
@@ -45,21 +161,33 @@ Content-Type: {{contentType}}
 {
   "name": "Sony PlayStation 5",
   "price": 7500000,
-  "stock": 10
+  "stock": 10,
+  "categoryId": {{categoryId}},
+  "supplierId": {{supplierId}}
 }
 
+### Capture Product ID
+@productId = {{createProduct.response.body.data.id}}
+
+### Get Product Details
+GET {{baseUrl}}/api/products/{{productId}}
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
 ### Update Product
-PUT {{baseUrl}}/api/products/1
+PUT {{baseUrl}}/api/products/{{productId}}
 Authorization: Bearer {{token}}
 Content-Type: {{contentType}}
 
 {
   "name": "Sony PlayStation 5 Slim",
   "price": 7200000,
-  "stock": 15
+  "stock": 15,
+  "categoryId": {{categoryId}},
+  "supplierId": {{supplierId}}
 }
 
 ### Delete Product
-DELETE {{baseUrl}}/api/products/1
+DELETE {{baseUrl}}/api/products/{{productId}}
 Authorization: Bearer {{token}}
 Accept: {{contentType}}

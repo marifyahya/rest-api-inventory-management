@@ -39,12 +39,27 @@ REST API for inventory management — built as a learning project to practice **
 
 ### Upcoming
 
-- EPIC-03: Supplier CRUD
-- EPIC-04: Product Enhancement (SKU, pagination, filters)
+### Completed (EPIC-03: Supplier CRUD)
+
+- Supplier CRUD operations (list, get by ID, create, update, delete)
+- Relationship mapping between Products and Suppliers
+- Delete guard — prevents deleting suppliers with linked products
+- Role-based route protection (write operations: ADMIN only)
+- Zod schema validation (`createSupplierSchema`, `updateSupplierSchema`)
+- Integration tests for Supplier endpoints
+
+### Completed (EPIC-04: Product Enhancement)
+
+- Dynamic SKU generator utility (`PROD-X` format)
+- Automatic local time conversion for all date fields (`withLocalTime` utility)
+- Integration with Category and Supplier relations
+
+### Upcoming
+
 - EPIC-05: Stock Transactions (IN/OUT with atomic operations)
 - EPIC-06: Reports & Dashboard (Excel export)
 - EPIC-07: Notifications (BullMQ + email alerts)
-- EPIC-08: Testing & Documentation
+- EPIC-08: Testing & Documentation (Enhance coverage & Swagger UI)
 
 ## Prerequisites
 
@@ -113,6 +128,8 @@ Base URL: `http://localhost:3002`
 | DELETE | `/api/products/:id` | Delete product |
 | GET | `/api/categories` | List all categories (with product count) |
 | GET | `/api/categories/:id` | Get category by ID |
+| GET | `/api/suppliers` | List all suppliers |
+| GET | `/api/suppliers/:id` | Get supplier by ID |
 
 ### Admin Only (ADMIN role + Bearer token)
 
@@ -122,6 +139,9 @@ Base URL: `http://localhost:3002`
 | POST | `/api/admin/categories` | Create new category |
 | PUT | `/api/admin/categories/:id` | Update category |
 | DELETE | `/api/admin/categories/:id` | Delete category |
+| POST | `/api/admin/suppliers` | Create new supplier |
+| PUT | `/api/admin/suppliers/:id` | Update supplier |
+| DELETE | `/api/admin/suppliers/:id` | Delete supplier |
 
 ## Default Credentials
 
@@ -152,6 +172,7 @@ src/
 │   ├── auth.controller.ts
 │   ├── category.controller.ts
 │   ├── product.controller.ts
+│   ├── supplier.controller.ts
 │   └── user.controller.ts
 ├── middlewares/
 │   ├── auth.middleware.ts
@@ -160,12 +181,14 @@ src/
 │   └── error-handler.middleware.ts
 ├── services/
 │   ├── category.service.ts
-│   ├── user.service.ts
-│   └── product.service.ts
+│   ├── product.service.ts
+│   ├── supplier.service.ts
+│   └── user.service.ts
 ├── schemas/
 │   ├── category.schema.ts
-│   ├── user.schema.ts
-│   └── product.schema.ts
+│   ├── product.schema.ts
+│   ├── supplier.schema.ts
+│   └── user.schema.ts
 ├── routes/
 │   └── api.ts
 ├── types/

@@ -3,12 +3,18 @@ import bcrypt from "bcryptjs";
 import { NotFoundError } from "../utils/errors/AppError";
 
 class UserService {
-  findByEmail(email: string) {
-    return prisma.user.findUnique({
+  async findByEmail(email: string) {
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
     });
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user;
   }
 
   async create(payload: { email: string; password: string; name: string; role: string }) {

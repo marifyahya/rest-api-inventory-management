@@ -27,14 +27,18 @@ describe("Product API Integration", () => {
   describe("GET /api/products", () => {
     it("should return 200 and all products", async () => {
       const mockProducts = [{ id: 1, name: "Product A", price: 100, stock: 10 }];
-      (productService.getAll as jest.Mock).mockResolvedValue(mockProducts);
+      const mockData = {
+        data: mockProducts,
+        meta: { currentPage: 1, lastPage: 1, perPage: 10, total: 1 },
+      };
+      (productService.getAll as jest.Mock).mockResolvedValue(mockData);
 
       const response = await request(app).get("/api/products");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         success: true,
-        data: mockProducts,
+        ...mockData,
       });
     });
   });
@@ -51,7 +55,7 @@ describe("Product API Integration", () => {
     });
 
     it("should return 201 when product is created", async () => {
-      const validProduct = { name: "New Product", price: 150, stock: 5 };
+      const validProduct = { name: "New Product", price: 150, stock: 5, categoryId: 1 };
       (productService.create as jest.Mock).mockResolvedValue({
         id: 1,
         ...validProduct,

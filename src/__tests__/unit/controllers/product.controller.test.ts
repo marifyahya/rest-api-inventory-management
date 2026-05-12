@@ -33,19 +33,24 @@ describe("ProductController", () => {
   });
 
   describe("index", () => {
-    it("should return all products", async () => {
+    it("should return all products with pagination meta", async () => {
       const mockProducts = [
         { id: 1, name: "Product 1", price: 100, stock: 10 },
         { id: 2, name: "Product 2", price: 200, stock: 20 },
       ];
+      const mockMeta = { currentPage: 1, lastPage: 1, perPage: 10, total: 2 };
 
-      (productService.getAll as jest.Mock).mockResolvedValue(mockProducts);
+      (productService.getAll as jest.Mock).mockResolvedValue({
+        data: mockProducts,
+        meta: mockMeta,
+      });
 
       await productController.index(mockRequest, mockResponse, mockNext);
 
       expect(jsonMock).toHaveBeenCalledWith({
         success: true,
         data: mockProducts,
+        meta: mockMeta,
       });
     });
   });

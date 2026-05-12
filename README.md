@@ -37,8 +37,6 @@ REST API for inventory management — built as a learning project to practice **
 - Unit & integration tests for Category Service and Controller
 - OpenAPI documentation for Category endpoints
 
-### Upcoming
-
 ### Completed (EPIC-03: Supplier CRUD)
 
 - Supplier CRUD operations (list, get by ID, create, update, delete)
@@ -50,9 +48,13 @@ REST API for inventory management — built as a learning project to practice **
 
 ### Completed (EPIC-04: Product Enhancement)
 
-- Dynamic SKU generator utility (`PROD-X` format)
+- Dynamic SKU generator (`ELE-000001` format — based on category prefix)
+- Pagination utility (`paginate`, `paginationMeta`) — supports `?page=`, `?limit=`
+- Product filtering by name (`?name=`)
+- Product list returns paginated response `{ data, meta }`
+- Product detail includes nested `category` and `supplier` relations
+- Category-aware SKU: auto-increments per category (`ELE-000001`, `ELE-000002`)
 - Automatic local time conversion for all date fields (`withLocalTime` utility)
-- Integration with Category and Supplier relations
 
 ### Upcoming
 
@@ -121,9 +123,9 @@ Base URL: `http://localhost:3002`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/auth/me` | Get current user profile |
-| GET | `/api/products` | List all products |
-| GET | `/api/products/:id` | Get product by ID |
-| POST | `/api/products` | Create new product |
+| GET | `/api/products` | List products (paginated, filterable by `?name=`, `?page=`, `?limit=`) |
+| GET | `/api/products/:id` | Get product by ID (includes category & supplier) |
+| POST | `/api/products` | Create new product (auto-generates SKU) |
 | PUT | `/api/products/:id` | Update product |
 | DELETE | `/api/products/:id` | Delete product |
 | GET | `/api/categories` | List all categories (with product count) |
@@ -197,6 +199,8 @@ src/
 │   ├── jwt.util.ts
 │   ├── date.util.ts
 │   ├── async-handler.ts
+│   ├── pagination.util.ts
+│   ├── sku.util.ts
 │   └── errors/
 │       └── AppError.ts
 ├── lib/

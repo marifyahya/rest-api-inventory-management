@@ -147,8 +147,13 @@ Accept: {{contentType}}
 # 05. PRODUCT MODULE
 ##################################################################
 
-### List All Products
-GET {{baseUrl}}/api/products
+### List All Products (Paginated)
+GET {{baseUrl}}/api/products?page=1&limit=5
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Search Products by Name
+GET {{baseUrl}}/api/products?name=Sony
 Authorization: Bearer {{token}}
 Accept: {{contentType}}
 

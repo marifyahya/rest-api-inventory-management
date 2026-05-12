@@ -100,9 +100,27 @@ paths:
       operationId: getProducts
       tags:
         - Products
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            default: 10
+        - name: name
+          in: query
+          description: Filter by product name
+          schema:
+            type: string
       responses:
         "200":
-          description: A list of products
+          description: A paginated list of products
           content:
             application/json:
               schema:
@@ -115,6 +133,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Product"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
     post:
       summary: Create a new product
       operationId: createProduct
@@ -685,3 +705,18 @@ components:
         updatedAt:
           type: string
           example: "2024-05-05T15:00:00.000Z"
+    PaginationMeta:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          example: 1
+        lastPage:
+          type: integer
+          example: 5
+        perPage:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 50

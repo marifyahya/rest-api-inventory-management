@@ -4,9 +4,9 @@ import { withLocalTime } from "../utils/date.util";
 import { NotFoundError } from "../utils/errors/AppError";
 import { asyncHandler } from "../utils/async-handler";
 
-export const index = asyncHandler(async (_req: Request, res: Response) => {
-  const products = await productService.getAll();
-  res.json({ success: true, data: withLocalTime(products) });
+export const index = asyncHandler(async (req: Request, res: Response) => {
+  const { data, meta } = await productService.getAll(req);
+  res.json({ success: true, data: withLocalTime(data), meta });
 });
 
 export const show = asyncHandler(async (req: Request, res: Response) => {

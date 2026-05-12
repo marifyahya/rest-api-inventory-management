@@ -14,5 +14,8 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma-insider"
   }
 }

@@ -8,12 +8,14 @@ import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
 import { createProductSchema } from "../schemas/product.schema";
 import { createCategorySchema, updateCategorySchema } from "../schemas/category.schema";
 import { createSupplierSchema, updateSupplierSchema } from "../schemas/supplier.schema";
+import { createStockTransactionSchema } from "../schemas/stock-transaction.schema";
 
 import * as authController from "../controllers/auth.controller";
 import * as userController from "../controllers/user.controller";
 import * as productController from "../controllers/product.controller";
 import * as categoryController from "../controllers/category.controller";
 import * as supplierController from "../controllers/supplier.controller";
+import * as stockTransactionController from "../controllers/stock-transaction.controller";
 
 const router = Router();
 const protectedRouter = Router();
@@ -44,6 +46,11 @@ protectedRouter.get("/products/:id", productController.show);
 protectedRouter.post("/products", validate(createProductSchema as any), productController.store);
 protectedRouter.put("/products/:id", validate(createProductSchema as any), productController.update);
 protectedRouter.delete("/products/:id", productController.destroy);
+
+protectedRouter.get("/stock/transactions", stockTransactionController.index);
+protectedRouter.get("/stock/transactions/:id", stockTransactionController.show);
+protectedRouter.post("/stock/in", validate(createStockTransactionSchema as any), stockTransactionController.stockIn);
+protectedRouter.post("/stock/out", validate(createStockTransactionSchema as any), stockTransactionController.stockOut);
 
 router.use("/admin", adminRouter);
 router.use(protectedRouter);

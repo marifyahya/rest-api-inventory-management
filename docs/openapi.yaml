@@ -619,6 +619,141 @@ paths:
                     type: string
                     example: "Category not found"
 
+  /stock/transactions:
+    get:
+      summary: Get stock transaction history
+      operationId: getStockTransactions
+      tags:
+        - Stock Transactions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StockTransaction"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+
+  /stock/transactions/{id}:
+    get:
+      summary: Get transaction by ID
+      operationId: getStockTransactionById
+      tags:
+        - Stock Transactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/StockTransaction"
+
+  /stock/transactions/stockIn:
+    post:
+      summary: Record stock inbound
+      operationId: stockIn
+      tags:
+        - Stock Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: integer
+                quantity:
+                  type: integer
+                note:
+                  type: string
+      responses:
+        "200":
+          description: Stock recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/StockTransaction"
+
+  /stock/transactions/stockOut:
+    post:
+      summary: Record stock outbound
+      operationId: stockOut
+      tags:
+        - Stock Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: integer
+                quantity:
+                  type: integer
+                note:
+                  type: string
+      responses:
+        "200":
+          description: Stock recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: "#/components/schemas/StockTransaction"
+        "400":
+          description: Insufficient stock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -720,3 +855,21 @@ components:
         total:
           type: integer
           example: 50
+    StockTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        type:
+          type: string
+          enum: [ "IN", "OUT" ]
+        quantity:
+          type: integer
+        note:
+          type: string
+        createdAt:
+          type: string
+        product:
+          $ref: "#/components/schemas/Product"

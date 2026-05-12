@@ -196,3 +196,41 @@ Content-Type: {{contentType}}
 DELETE {{baseUrl}}/api/products/{{productId}}
 Authorization: Bearer {{token}}
 Accept: {{contentType}}
+
+
+##################################################################
+# 06. STOCK TRANSACTION MODULE
+##################################################################
+
+### List Transaction History
+GET {{baseUrl}}/api/stock/transactions?page=1&limit=10
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Record Stock In
+POST {{baseUrl}}/api/stock/transactions/stockIn
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "productId": {{productId}},
+  "quantity": 20,
+  "note": "Restocking items from supplier"
+}
+
+### Record Stock Out
+POST {{baseUrl}}/api/stock/transactions/stockOut
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "productId": {{productId}},
+  "quantity": 5,
+  "note": "Sold to customer"
+}
+
+### Get Transaction Details
+# @name getTransaction
+GET {{baseUrl}}/api/stock/transactions/1
+Authorization: Bearer {{token}}
+Accept: {{contentType}}

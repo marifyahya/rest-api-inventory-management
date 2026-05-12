@@ -19,15 +19,17 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  stockTransactions StockTransaction[]
+
   @@map("users")
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   products    Product[]
 
   @@map("categories")
@@ -41,7 +43,7 @@ model Supplier {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  products  Product[]
+  products Product[]
 
   @@map("suppliers")
 }
@@ -58,8 +60,24 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  category    Category @relation(fields: [categoryId], references: [id])
-  supplier    Supplier? @relation(fields: [supplierId], references: [id])
+  category          Category           @relation(fields: [categoryId], references: [id])
+  supplier          Supplier?          @relation(fields: [supplierId], references: [id])
+  stockTransactions StockTransaction[]
 
   @@map("products")
+}
+
+model StockTransaction {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  type      String   @default("IN") // "IN" | "OUT"
+  quantity  Int
+  note      String?
+  userId    Int
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@map("stock_transactions")
 }

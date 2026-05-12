@@ -89,12 +89,12 @@
 
 | # | Task | File | Est. | Dep |
 |---|------|------|------|-----|
-| 5.1 | **Tambah StockTransaction model di Prisma** — productId, supplierId?, userId, type (IN/OUT), reason, quantity, notes?, createdAt. Jalankan migration | `[EDIT]` prisma/schema.prisma | 8m | 🔴 4.1 |
-| 5.2 | **Buat StockTransaction Zod Schema** — `stockInSchema` (productId, supplierId?, quantity, reason enum [PURCHASE, RETURN, ADJUSTMENT], notes?), `stockOutSchema` (reason enum [SALE, DAMAGE, ADJUSTMENT]) | `[NEW]` src/schemas/stock-transaction.schema.ts | 8m | 🟢 |
-| 5.3 | **Buat StockTransactionService — stockIn** — Gunakan `prisma.$transaction()`: create StockTransaction + increment `product.stock`. Return transaction with product detail | `[NEW]` src/services/stock-transaction.service.ts | 12m | 🔵 5.1 |
-| 5.4 | **StockTransactionService — stockOut** — Gunakan `prisma.$transaction()`: validate stock cukup (throw `ValidationError` jika insufficient), create transaction + decrement `product.stock` | `[EDIT]` src/services/stock-transaction.service.ts | 12m | 🔵 5.3 |
-| 5.5 | **StockTransactionService — getHistory** — Filter by `productId?`, `type?`, `startDate?`, `endDate?`. Include product & user relation. Support pagination | `[EDIT]` src/services/stock-transaction.service.ts | 10m | 🔵 5.4 |
-| 5.6 | **Buat StockTransactionController + register routes** — `stockIn`, `stockOut`, `history`, `show`. Register di routes: `POST /stock/in`, `POST /stock/out`, `GET /stock/transactions`, `GET /stock/transactions/:id` | `[NEW]` src/controllers/stock-transaction.controller.ts, `[EDIT]` src/routes/api.ts | 12m | 🔵 5.5 |
+| ~~5.1~~ | ✅ **Tambah StockTransaction model di Prisma** — productId, supplierId?, userId, type (IN/OUT), reason, quantity, notes?, createdAt. Jalankan migration | `[EDIT]` prisma/schema.prisma | 8m | 🔴 4.1 |
+| ~~5.2~~ | ✅ **Buat StockTransaction Zod Schema** — `stockInSchema` (productId, supplierId?, quantity, reason enum [PURCHASE, RETURN, ADJUSTMENT], notes?), `stockOutSchema` (reason enum [SALE, DAMAGE, ADJUSTMENT]) | `[NEW]` src/schemas/stock-transaction.schema.ts | 8m | 🟢 |
+| ~~5.3~~ | ✅ **Buat StockTransactionService — stockIn** — Gunakan `prisma.$transaction()`: create StockTransaction + increment `product.stock`. Return transaction with product detail | `[NEW]` src/services/stock-transaction.service.ts | 12m | 🔵 5.1 |
+| ~~5.4~~ | ✅ **StockTransactionService — stockOut** — Gunakan `prisma.$transaction()`: validate stock cukup (throw `ValidationError` jika insufficient), create transaction + decrement `product.stock` | `[EDIT]` src/services/stock-transaction.service.ts | 12m | 🔵 5.3 |
+| ~~5.5~~ | ✅ **StockTransactionService — getHistory** — Filter by `productId?`, `type?`, `startDate?`, `endDate?`. Include product & user relation. Support pagination | `[EDIT]` src/services/stock-transaction.service.ts | 10m | 🔵 5.4 |
+| ~~5.6~~ | ✅ **Buat StockTransactionController + register routes** — `stockIn`, `stockOut`, `history`, `show`. Register di routes: `POST /stock/in`, `POST /stock/out`, `GET /stock/transactions`, `GET /stock/transactions/:id` | `[NEW]` src/controllers/stock-transaction.controller.ts, `[EDIT]` src/routes/api.ts | 12m | 🔵 5.5 |
 
 > [!IMPORTANT]
 > **Atomicity is critical!** Selalu gunakan `prisma.$transaction()` untuk stock in/out agar data tidak inkonsisten jika terjadi error di tengah proses.

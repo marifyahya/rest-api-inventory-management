@@ -140,9 +140,9 @@
 | 8.3 | **Integration test: Category CRUD** — Test create, list (with _count), update, delete (empty + with products) | `[NEW]` src/__tests__/integration/category.test.ts | 15m | 🔵 8.1 |
 | 8.4 | **Integration test: Supplier CRUD** — Test create, list, update, delete (linked + unlinked) | `[NEW]` src/__tests__/integration/supplier.test.ts | 15m | 🔵 8.1 |
 | 8.5 | **Integration test: Product CRUD** — Test create (with SKU auto-gen), list (pagination, filter), update, delete | `[NEW]` src/__tests__/integration/product.test.ts | 15m | 🔵 8.1 |
-| 8.6 | **Integration test: Stock Transactions** — Test stock in, stock out (success + insufficient stock), transaction history with filters | `[NEW]` src/__tests__/integration/stock-transaction.test.ts | 15m | 🔵 8.1 |
-| 8.7 | **Update api-test.http** — Tambah semua endpoint baru (Category, Supplier, Stock In/Out, Reports) ke file REST Client | `[EDIT]` api-test.http | 10m | 🔴 All EPICs |
-| 8.8 | **Update README.md** — Project overview, setup instructions, environment variables, API endpoint summary, tech stack | `[EDIT]` README.md | 15m | 🔴 All EPICs |
+| ~~8.6~~ | ✅ **Integration test: Stock Transactions** — Test stock in, stock out (success + insufficient stock), transaction history with filters | `[NEW]` src/__tests__/integration/stock-transaction.test.ts | 15m | 🔵 8.1 |
+| ~~8.7~~ | ✅ **Update api-test.http** — Tambah semua endpoint baru (Category, Supplier, Stock In/Out, Reports) ke file REST Client | `[EDIT]` api-test.http | 10m | 🔴 All EPICs |
+| ~~8.8~~ | ✅ **Update README.md** — Project overview, setup instructions, environment variables, API endpoint summary, tech stack | `[EDIT]` README.md | 15m | 🔴 All EPICs |
 
 ---
 

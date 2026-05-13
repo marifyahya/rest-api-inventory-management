@@ -56,9 +56,15 @@ REST API for inventory management — built as a learning project to practice **
 - Category-aware SKU: auto-increments per category (`ELE-000001`, `ELE-000002`)
 - Automatic local time conversion for all date fields (`withLocalTime` utility)
 
-### Upcoming
+### Completed (EPIC-05: Stock Transactions)
+- Inbound stock (`POST /api/stock/in`) and Outbound stock (`POST /api/stock/out`)
+- Atomic operations using `prisma.$transaction()` to ensure data integrity
+- Stock transactions are linked to the user who performed the action (`userId`)
+- Validation for insufficient stock during outbound transactions
+- Paginated transaction history with product and user details
+- Transaction details view by ID
 
-- EPIC-05: Stock Transactions (IN/OUT with atomic operations)
+### Upcoming
 - EPIC-06: Reports & Dashboard (Excel export)
 - EPIC-07: Notifications (BullMQ + email alerts)
 - EPIC-08: Testing & Documentation (Enhance coverage & Swagger UI)
@@ -132,6 +138,10 @@ Base URL: `http://localhost:3002`
 | GET | `/api/categories/:id` | Get category by ID |
 | GET | `/api/suppliers` | List all suppliers |
 | GET | `/api/suppliers/:id` | Get supplier by ID |
+| GET | `/api/stock/transactions` | List stock transaction history (paginated) |
+| GET | `/api/stock/transactions/:id` | Get transaction detail by ID |
+| POST | `/api/stock/in` | Record stock inbound (increments product stock) |
+| POST | `/api/stock/out` | Record stock outbound (decrements product stock) |
 
 ### Admin Only (ADMIN role + Bearer token)
 
@@ -175,6 +185,7 @@ src/
 │   ├── category.controller.ts
 │   ├── product.controller.ts
 │   ├── supplier.controller.ts
+│   ├── stock-transaction.controller.ts
 │   └── user.controller.ts
 ├── middlewares/
 │   ├── auth.middleware.ts
@@ -185,11 +196,13 @@ src/
 │   ├── category.service.ts
 │   ├── product.service.ts
 │   ├── supplier.service.ts
+│   ├── stock-transaction.service.ts
 │   └── user.service.ts
 ├── schemas/
 │   ├── category.schema.ts
 │   ├── product.schema.ts
 │   ├── supplier.schema.ts
+│   ├── stock-transaction.schema.ts
 │   └── user.schema.ts
 ├── routes/
 │   └── api.ts

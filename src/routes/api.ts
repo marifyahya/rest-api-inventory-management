@@ -16,6 +16,7 @@ import * as productController from "../controllers/product.controller";
 import * as categoryController from "../controllers/category.controller";
 import * as supplierController from "../controllers/supplier.controller";
 import * as stockTransactionController from "../controllers/stock-transaction.controller";
+import * as reportController from "../controllers/report.controller";
 
 const router = Router();
 const protectedRouter = Router();
@@ -51,6 +52,11 @@ protectedRouter.get("/stock/transactions", stockTransactionController.index);
 protectedRouter.get("/stock/transactions/:id", stockTransactionController.show);
 protectedRouter.post("/stock/in", validate(createStockTransactionSchema as any), stockTransactionController.stockIn);
 protectedRouter.post("/stock/out", validate(createStockTransactionSchema as any), stockTransactionController.stockOut);
+
+protectedRouter.get("/reports", reportController.dashboard);
+protectedRouter.get("/reports/low-stock", reportController.lowStock);
+protectedRouter.get("/reports/stock/export", reportController.exportStock);
+protectedRouter.get("/reports/transactions/export", reportController.exportTransactions);
 
 router.use("/admin", adminRouter);
 router.use(protectedRouter);

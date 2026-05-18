@@ -120,11 +120,11 @@
 
 | # | Task | File | Est. | Dep |
 |---|------|------|------|-----|
-| 7.1 | **Setup Redis connection + BullMQ queue** — Create queue instance `lowStockQueue`, configure Redis connection (dari .env: `REDIS_HOST`, `REDIS_PORT`) | `[NEW]` src/lib/queue.ts | 10m | 🟢 |
-| 7.2 | **Buat NotificationService** — Setup nodemailer transporter (dari .env), method `sendLowStockAlert(product, currentStock)` → kirim email ke admin | `[NEW]` src/services/notification.service.ts | 10m | 🟢 |
-| 7.3 | **Buat Low Stock Alert Job** — BullMQ Worker yang listen `lowStockQueue`, process job → panggil `notificationService.sendLowStockAlert()` | `[NEW]` src/jobs/low-stock-alert.job.ts | 10m | 🔵 7.1, 7.2 |
-| 7.4 | **Integrate alert ke StockTransactionService** — Setelah `stockOut`, check if `product.stock <= product.minStock` → dispatch job ke `lowStockQueue` | `[EDIT]` src/services/stock-transaction.service.ts | 8m | 🔵 7.3, 🔴 5.4 |
-| 7.5 | **Tambah env variables + update .env.example** — `REDIS_HOST`, `REDIS_PORT`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `ALERT_EMAIL_TO` | `[EDIT]` .env.example | 3m | 🟢 |
+| ~~7.1~~ | ✅ **Setup Redis connection + BullMQ queue** — Create queue instance `lowStockQueue`, configure Redis connection (dari .env: `REDIS_HOST`, `REDIS_PORT`) | `[NEW]` src/lib/queue.ts | 10m | 🟢 |
+| ~~7.2~~ | ✅ **Buat NotificationService** — Setup nodemailer transporter (dari .env), method `sendLowStockAlert(product, currentStock)` → kirim email ke admin | `[NEW]` src/services/notification.service.ts | 10m | 🟢 |
+| ~~7.3~~ | ✅ **Buat Low Stock Alert Job** — BullMQ Worker yang listen `lowStockQueue`, process job → panggil `notificationService.sendLowStockAlert()` | `[NEW]` src/jobs/low-stock-alert.job.ts | 10m | 🔵 7.1, 7.2 |
+| ~~7.4~~ | ✅ **Integrate alert ke StockTransactionService** — Setelah `stockOut`, check if `product.stock <= product.minStock` → dispatch job ke `lowStockQueue` | `[EDIT]` src/services/stock-transaction.service.ts | 8m | 🔵 7.3, 🔴 5.4 |
+| ~~7.5~~ | ✅ **Tambah env variables + update .env.example** — `REDIS_HOST`, `REDIS_PORT`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `ALERT_EMAIL_TO` | `[EDIT]` .env.example | 3m | 🟢 |
 
 > [!WARNING]
 > **Prerequisite:** Redis harus sudah running. Install via `brew install redis && brew services start redis` atau gunakan Docker: `docker run -d -p 6379:6379 redis`

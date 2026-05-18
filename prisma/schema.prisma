@@ -55,6 +55,7 @@ model Product {
   description String?
   price       Float
   stock       Int
+  minStock    Int      @default(10)
   categoryId  Int
   supplierId  Int?
   createdAt   DateTime @default(now())

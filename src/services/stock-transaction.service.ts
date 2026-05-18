@@ -2,6 +2,7 @@ import { Request } from "express";
 import prisma from "../lib/prisma";
 import { NotFoundError, ValidationError } from "../utils/errors/AppError";
 import { paginate, paginationMeta } from "../utils/pagination.util";
+import { lowStockQueue } from "../lib/queue";
 
 class StockTransactionService {
   async stockIn(payload: { productId: number; quantity: number; note?: string }, userId: number) {
@@ -38,7 +39,7 @@ class StockTransactionService {
   }
 
   async stockOut(payload: { productId: number; quantity: number; note?: string }, userId: number) {
-    return await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const product = await tx.product.findFirst({
         where: { id: payload.productId },
       });
@@ -64,15 +65,33 @@ class StockTransactionService {
         },
       });
 
-      await tx.product.update({
+      const updatedProduct = await tx.product.update({
         where: { id: payload.productId },
         data: {
           stock: { decrement: payload.quantity },
         },
       });
 
-      return transaction;
+      if (updatedProduct.stock <= updatedProduct.minStock) {
+        return { transaction, lowStockProduct: updatedProduct };
+      }
+
+      return { transaction, lowStockProduct: null };
     });
+
+    if (result.lowStockProduct) {
+      lowStockQueue.add({
+        productId: result.lowStockProduct.id,
+        productName: result.lowStockProduct.name,
+        sku: result.lowStockProduct.sku,
+        currentStock: result.lowStockProduct.stock,
+        minStock: result.lowStockProduct.minStock,
+      }).catch((error) => {
+        console.error("Failed to enqueue low stock alert:", error);
+      });
+    }
+
+    return result.transaction;
   }
 
   async getAll(req: Request) {

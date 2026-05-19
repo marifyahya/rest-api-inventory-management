@@ -55,8 +55,8 @@ protectedRouter.post("/stock/out", validate(createStockTransactionSchema as any)
 
 protectedRouter.get("/reports", reportController.dashboard);
 protectedRouter.get("/reports/low-stock", reportController.lowStock);
-protectedRouter.get("/reports/stock/export", reportController.exportStock);
-protectedRouter.get("/reports/transactions/export", reportController.exportTransactions);
+protectedRouter.get("/reports/stock-export", reportController.exportStock);
+protectedRouter.get("/reports/transactions-export", reportController.exportTransactions);
 
 router.use("/admin", adminRouter);
 router.use(protectedRouter);

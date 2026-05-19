@@ -234,3 +234,26 @@ Content-Type: {{contentType}}
 GET {{baseUrl}}/api/stock/transactions/1
 Authorization: Bearer {{token}}
 Accept: {{contentType}}
+
+##################################################################
+# 07. REPORT MODULE
+##################################################################
+
+### Get Dashboard Statistics
+GET {{baseUrl}}/api/reports
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### List Low Stock Products
+GET {{baseUrl}}/api/reports/low-stock?page=1&limit=10
+Authorization: Bearer {{token}}
+Accept: {{contentType}}
+
+### Export Stock Report (Excel)
+GET {{baseUrl}}/api/reports/stock-export
+Authorization: Bearer {{token}}
+
+### Export Transaction Report (Excel Streaming)
+GET {{baseUrl}}/api/reports/transactions-export
+Authorization: Bearer {{token}}
+
